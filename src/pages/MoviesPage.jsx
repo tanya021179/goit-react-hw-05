@@ -9,20 +9,17 @@ const MoviesPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("query") ?? "";
 
-  useEffect(
-    () => async () => {
-      const getMovies = async () => {
-        try {
-          const dataMovies = await fetchMovie();
-          setMovies(dataMovies);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      getMovies();
-    },
-    []
-  );
+  useEffect(() => {
+    const getMovies = async () => {
+      try {
+        const dataMovies = await fetchMovie();
+        setMovies(dataMovies);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getMovies();
+  }, []);
 
   if (!movies) {
     return <div>Loading...</div>;
