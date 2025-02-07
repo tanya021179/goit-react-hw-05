@@ -7,29 +7,54 @@ import { useSearchParams } from "react-router-dom";
 const MoviesPage = () => {
   const [movies, setMovies] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const query = searchParams.get("query") ?? "";
 
   useEffect(() => {
     const getMovies = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
         const dataMovies = await fetchMovie();
         setMovies(dataMovies);
       } catch (error) {
-        console.log(error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
       }
     };
     getMovies();
   }, []);
 
-  if (!movies) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    const filteredData = movies.filter(
+      (movie) =>
+        movie &&
+        movie.title &&
+        movie.title.toLowerCase().includes(query.toLowerCase())
+    );
+
+    if (query) {
+      if (filteredData.length === 0) {
+        console.log("No movies found for your query");
+      }
+    }
+  }, [query, movies]);
 
   const handleChangeQuery = (value) => {
     searchParams.set("query", value);
-
     setSearchParams(searchParams);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   const filteredData = movies.filter(
     (movie) =>
