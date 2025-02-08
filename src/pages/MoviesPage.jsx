@@ -17,7 +17,7 @@ const MoviesPage = () => {
       setError(null);
 
       try {
-        const dataMovies = await fetchMovie();
+        const dataMovies = await fetchMovie(query);
         setMovies(dataMovies);
       } catch (error) {
         setError(error.message);
@@ -26,22 +26,7 @@ const MoviesPage = () => {
       }
     };
     getMovies();
-  }, []);
-
-  useEffect(() => {
-    const filteredData = movies.filter(
-      (movie) =>
-        movie &&
-        movie.title &&
-        movie.title.toLowerCase().includes(query.toLowerCase())
-    );
-
-    if (query) {
-      if (filteredData.length === 0) {
-        console.log("No movies found for your query");
-      }
-    }
-  }, [query, movies]);
+  }, [query]);
 
   const handleChangeQuery = (value) => {
     searchParams.set("query", value);
