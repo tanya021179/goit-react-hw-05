@@ -33,9 +33,16 @@ const MoviesPage = () => {
 
   const handleChangeQuery = (value) => {
     const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set("query", value);
-    searchParams.set("query", value);
-    setSearchParams(searchParams);
+    // newSearchParams.set("query", value);
+    // searchParams.set("query", value);
+    // setSearchParams(searchParams);
+
+    if (value.trim() === "") {
+      newSearchParams.delete("query");
+    } else {
+      newSearchParams.set("query", value);
+    }
+    setSearchParams(newSearchParams);
   };
 
   if (loading) {
