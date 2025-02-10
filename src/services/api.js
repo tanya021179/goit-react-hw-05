@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const url = "https://api.themoviedb.org/3/trending/movie/day?language=en-US";
-
+const searchMovieUrl =
+  "https://api.themoviedb.org/3/search/movie?language=en-US&query=";
 const options = {
   headers: {
     Authorization:
@@ -12,6 +13,18 @@ const options = {
 export const fetchMovie = async () => {
   return axios
     .get(url, options)
+    .then((response) => {
+      return response.data.results;
+    })
+    .catch((err) => {
+      console.error(err);
+      return [];
+    });
+};
+
+export const fetchMovieByQuery = async (query) => {
+  return axios
+    .get(`${searchMovieUrl}${encodeURIComponent(query)}`, options)
     .then((response) => {
       return response.data.results;
     })

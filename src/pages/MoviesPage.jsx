@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchMovie } from "../services/api";
+import { fetchMovie, fetchMovieByQuery } from "../services/api";
 import MovieList from "../components/MovieList/MovieList";
 import SearchBar from "../components/SearchBar/SearchBar";
 import { useSearchParams } from "react-router-dom";
@@ -20,8 +20,13 @@ const MoviesPage = () => {
       setHasSearched(true);
 
       try {
-        const dataMovies = await fetchMovie(query);
-        setMovies(dataMovies);
+        if (query) {
+          const dataMovies = await fetchMovieByQuery(query);
+          setMovies(dataMovies);
+        } else {
+          const dataMovies = await fetchMovie();
+          setMovies(dataMovies);
+        }
       } catch (error) {
         setError(error.message);
       } finally {
@@ -33,14 +38,11 @@ const MoviesPage = () => {
 
   const handleChangeQuery = (value) => {
     const newSearchParams = new URLSearchParams(searchParams);
-    // newSearchParams.set("query", value);
-    // searchParams.set("query", value);
-    // setSearchParams(searchParams);
 
     if (value.trim() === "") {
       newSearchParams.delete("query");
     } else {
-      newSearchParams.set("query", value);
+      newSearchParams.set("query", value.trim());
     }
     setSearchParams(newSearchParams);
   };
